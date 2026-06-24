@@ -1,4 +1,5 @@
 import { ScrollText, Layers, Beaker, Terminal } from "lucide-react";
+import CommandPalette from "@/components/CommandPalette";
 
 export default function WorkspacePage() {
   return (
@@ -51,7 +52,7 @@ export default function WorkspacePage() {
           <div>// Live telemetry & environment variables will align here.</div>
         </div>
       </section>
-
+      <CommandPalette />
     </div>
   );
 } 
