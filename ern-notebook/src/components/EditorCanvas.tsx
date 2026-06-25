@@ -1,8 +1,8 @@
 'use client';
 
 // 1. Import the BubbleMenu React Component from @tiptap/react
-import { useEditor, EditorContent, BubbleMenu } from '@tiptap/react';
-// 2. Import the Extension logic and alias it so there's no name conflict
+import { useEditor, EditorContent } from '@tiptap/react';
+import { BubbleMenu } from '@tiptap/react/menus';
 import BubbleMenuExtension from '@tiptap/extension-bubble-menu';
 import StarterKit from '@tiptap/starter-kit';
 import { useNotebookStore } from '@/store/useNotebookStore';
@@ -44,9 +44,8 @@ export default function EditorCanvas() {
       
       {/* 4. Use the React Component here in your JSX */}
       {editor && (
-        <BubbleMenu 
-          editor={editor} 
-          tippyOptions={{ duration: 100 }}
+        <BubbleMenu
+          editor={editor}
           className="flex items-center gap-1 bg-slate-900 border border-slate-800 rounded-lg p-1.5 shadow-xl backdrop-blur-sm animate-in fade-in zoom-in-95 duration-100"
         >
           <button
