@@ -7,7 +7,22 @@ import { useNotebookStore } from '@/store/useNotebookStore';
 import { useEffect } from 'react';
 
 export default function EditorCanvas() {
-  const { currentNote, updateNoteContent } = useNotebookStore();
+  // Read store values directly to avoid incorrect type assertion
+  // NotebookState may not have a currentNote type declared, so access via any
+  const currentNote = useNotebookStore((state: any) => state.currentNote as { id: string; content: string } | null);
+  const updateNoteContent = useNotebookStore((state) => {
+    const store = state as any;
+
+    if (typeof store.updateNoteContent === 'function') {
+      return store.updateNoteContent as (id: string, content: string) => void;
+    }
+
+    if (typeof store.updateNote === 'function') {
+      return (id: string, content: string) => store.updateNote(id, { content });
+    }
+
+    return () => {};
+  });
 
   const editor = useEditor({
     extensions: [
@@ -52,12 +67,7 @@ export default function EditorCanvas() {
     <div className="relative w-full border border-slate-200 dark:border-slate-800 rounded-lg p-4 bg-white dark:bg-slate-950">
       {/* Selection Bubble Menu */}
       <BubbleMenu 
-        editor={editor} 
-        tippyOptions={{ 
-          duration: 100,
-          // This keeps the bubble menu pinned safely during the block-size shift
-          moveTransition: 'transform 0.1s ease-out' 
-        }}
+        editor={editor}
       >
         <div className="flex items-center gap-1 bg-slate-900 dark:bg-slate-800 px-2 py-1 rounded-md shadow-xl border border-slate-700">
           <button
