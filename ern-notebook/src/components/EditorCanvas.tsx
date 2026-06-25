@@ -1,13 +1,14 @@
 'use client';
 
-import { useEditor, EditorContent } from '@tiptap/react';
-import { BubbleMenu } from '@tiptap/react/menus';
+import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { useNotebookStore } from '@/store/useNotebookStore';
 import { useEffect } from 'react';
 
 export default function EditorCanvas() {
-  const { currentNote, updateNoteContent } = useNotebookStore();
+  const { notes, activeNoteId, updateActiveNote } = useNotebookStore();
+
+  const currentNote = notes.find((note) => note.id === activeNoteId) || notes[0];
 
   const editor = useEditor({
     extensions: [
@@ -34,7 +35,7 @@ export default function EditorCanvas() {
     },
     onUpdate: ({ editor }) => {
       if (currentNote) {
-        updateNoteContent(currentNote.id, editor.getHTML());
+        updateActiveNote({ content: editor.getHTML() });
       }
     },
   });
@@ -44,56 +45,12 @@ export default function EditorCanvas() {
     if (editor && currentNote && editor.getHTML() !== currentNote.content) {
       editor.commands.setContent(currentNote.content);
     }
-  }, [currentNote?.id, editor]);
+  }, [currentNote?.id, currentNote?.content, editor]);
 
   if (!editor) return null;
 
   return (
     <div className="relative w-full border border-slate-200 dark:border-slate-800 rounded-lg p-4 bg-white dark:bg-slate-950">
-      {/* Selection Bubble Menu */}
-      <BubbleMenu 
-        editor={editor} 
-        tippyOptions={{ 
-          duration: 100,
-          // This keeps the bubble menu pinned safely during the block-size shift
-          moveTransition: 'transform 0.1s ease-out' 
-        }}
-      >
-        <div className="flex items-center gap-1 bg-slate-900 dark:bg-slate-800 px-2 py-1 rounded-md shadow-xl border border-slate-700">
-          <button
-            onClick={() => editor.chain().focus().toggleBold().run()}
-            className={`p-1 px-2 text-xs rounded font-medium ${editor.isActive('bold') ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-700'}`}
-          >
-            Bold
-          </button>
-          
-          <button
-            onClick={() => editor.chain().focus().toggleItalic().run()}
-            className={`p-1 px-2 text-xs rounded font-medium ${editor.isActive('italic') ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-700'}`}
-          >
-            Italic
-          </button>
-
-          <div className="w-[1px] h-4 bg-slate-700 mx-1" />
-
-          {/* H1 Toggle Button */}
-          <button
-            onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-            className={`p-1 px-2 text-xs rounded font-medium ${editor.isActive('heading', { level: 1 }) ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-700'}`}
-          >
-            H1
-          </button>
-
-          {/* H2 Toggle Button */}
-          <button
-            onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-            className={`p-1 px-2 text-xs rounded font-medium ${editor.isActive('heading', { level: 2 }) ? 'bg-blue-600 text-white' : 'text-slate-300 hover:bg-slate-700'}`}
-          >
-            H2
-          </button>
-        </div>
-      </BubbleMenu>
-
       {/* Actual Editor Canvas */}
       <EditorContent editor={editor} />
     </div>
