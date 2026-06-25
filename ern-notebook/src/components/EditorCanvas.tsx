@@ -1,6 +1,9 @@
 'use client';
 
+// 1. Import the BubbleMenu React Component from @tiptap/react
 import { useEditor, EditorContent, BubbleMenu } from '@tiptap/react';
+// 2. Import the Extension logic and alias it so there's no name conflict
+import BubbleMenuExtension from '@tiptap/extension-bubble-menu';
 import StarterKit from '@tiptap/starter-kit';
 import { useNotebookStore } from '@/store/useNotebookStore';
 import { useEffect } from 'react';
@@ -12,7 +15,11 @@ export default function EditorCanvas() {
   const activeNote = notes.find((n) => n.id === activeNoteId) || notes[0];
 
   const editor = useEditor({
-    extensions: [StarterKit],
+    // 3. Pass the Extension logic into the extensions array
+    extensions: [
+      StarterKit, 
+      BubbleMenuExtension,
+    ],
     content: activeNote?.content || '',
     editorProps: {
       attributes: {
@@ -35,7 +42,7 @@ export default function EditorCanvas() {
   return (
     <div className="w-full border border-slate-900 bg-slate-950/40 rounded-xl p-6 min-h-[450px] relative">
       
-      {/* Dynamic Floating Bubble Menu */}
+      {/* 4. Use the React Component here in your JSX */}
       {editor && (
         <BubbleMenu 
           editor={editor} 
