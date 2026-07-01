@@ -6,6 +6,12 @@ export interface Note {
   content: string;
   status: 'IN_PROGRESS' | 'COMPLETED';
   createdAt: string;
+  metadata?: {
+    experimentId?: string;
+    trialNumber?: string;
+    temperature?: string;
+    status?: string;
+  };
 }
 
 interface NotebookState {
