@@ -3,7 +3,7 @@
 An open-source, web-first Electronic Science Notebook tailored for students, hackers, and R&D enthusiasts (especially in Biomedical Engineering). Built to replace rigid, bloated legacy tools with a fast, zero-friction canvas for logging experiments, tracking variables, and visualizing data.
 
 > **Status:** 🛠️ Work In Progress — Building live for Hack Club Stardance!
-> **Live Demo:** [Insert your Vercel URL here once deployed]
+> **Live Demo:** https://ern-notebook.vercel.app/
 
 ---
 
