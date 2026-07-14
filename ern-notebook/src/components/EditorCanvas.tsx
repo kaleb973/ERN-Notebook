@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 export default function EditorCanvas() {
   const { notes, activeNoteId, updateActiveNote } = useNotebookStore();
 
-  const currentNote = notes.find((note) => note.id === activeNoteId) || notes[0];
+  const currentNote = notes.find((note: any) => note.id === activeNoteId) || notes[0];
 
   const editor = useEditor({
     extensions: [
