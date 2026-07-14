@@ -1,6 +1,6 @@
 'use client'; // At the very top so React knows it's an interactive page
 
-import { Layers, Beaker, Terminal } from "lucide-react";
+import { Layers, Beaker, Terminal, Search } from "lucide-react";
 import CommandPalette from "@/components/CommandPalette";
 import EditorCanvas from "@/components/EditorCanvas"; 
 // Import matches user store file path:
