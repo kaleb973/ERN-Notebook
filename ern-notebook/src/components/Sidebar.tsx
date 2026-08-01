@@ -25,7 +25,7 @@ export default function Sidebar({
       <div className="flex items-center justify-between gap-2 px-2 pb-4 border-b border-slate-800">
         <div className="flex items-center gap-2 min-w-0">
           <Beaker className="h-5 w-5 text-emerald-400 shrink-0" />
-          {!isCollapsed && <span className="font-semibold tracking-wide text-slate-200 truncate">ERN Workspace</span>}
+          {!isCollapsed && <span className="font-semibold tracking-wide text-slate-200 truncate">BenchNode Workspace</span>}
         </div>
         <button type="button" onClick={onToggleCollapse}
           className="rounded-md border border-slate-700 bg-slate-800 px-2 py-1 text-[10px] text-slate-300 hover:bg-slate-700">
