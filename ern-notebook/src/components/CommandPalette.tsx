@@ -41,8 +41,10 @@ export default function CommandPalette() {
 
   if (!isOpen) return null;
 
-  const filteredNotes = notes.filter((note) =>
-    note.title.toLowerCase().includes(searchQuery.toLowerCase())
+  const safeNotes = Array.isArray(notes) ? notes : [];
+  
+  const filteredNotes = safeNotes.filter((note) =>
+    (note?.title|| "Untitled").toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   // Reset selection index when search query changes
