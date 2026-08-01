@@ -39,6 +39,11 @@ export default function CommandPalette() {
     }
   }, [isOpen]);
 
+  // Reset selection index when search query changes
+  useEffect(() => {
+    setSelectedIndex(0);
+  }, [searchQuery]);
+
   if (!isOpen) return null;
 
   const safeNotes = Array.isArray(notes) ? notes : [];
@@ -46,11 +51,6 @@ export default function CommandPalette() {
   const filteredNotes = safeNotes.filter((note) =>
     (note?.title|| "Untitled").toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-  // Reset selection index when search query changes
-  useEffect(() => {
-    setSelectedIndex(0);
-  }, [searchQuery]);
 
   const handleSelectNote = (id: string) => {
     setActiveNoteId(id);
