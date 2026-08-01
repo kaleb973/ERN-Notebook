@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
 export interface Note {
   id: string;
@@ -22,31 +23,38 @@ interface NotebookState {
   setActiveNoteId: (id: string) => void;
 }
 
-export const useNotebookStore = create<NotebookState>((set) => ({
-  notes: [
+export const useNotebookStore = create<NotebookState>()(
+  persist(
+    (set) => ({
+      notes: [
+        {
+          id: '1',
+          title: 'ECG Filter Calibration Test',
+          content: '<h2>Protocol Status: Active</h2><p>Initial calibration readings look stable...</p>',
+          status: 'IN_PROGRESS',
+          createdAt: new Date().toLocaleDateString(),
+        }
+      ],
+      activeNoteId: '1',
+      addNote: (title) => set((state) => {
+        const newNote: Note = {
+          id: Math.random().toString(36).substring(7),
+          title,
+          content: '<p>Start typing new lab observations...</p>',
+          status: 'IN_PROGRESS',
+          createdAt: new Date().toLocaleDateString(),
+        };
+        return { notes: [...state.notes, newNote], activeNoteId: newNote.id };
+      }),
+      updateActiveNote: (updates) => set((state) => ({
+        notes: state.notes.map((note) =>
+        note.id === state.activeNoteId ? { ...note, ...updates } : note
+        ),
+      })),
+      setActiveNoteId: (id) => set({ activeNoteId: id }),
+    }),
     {
-      id: '1',
-      title: 'ECG Filter Calibration Test',
-      content: '<h2>Protocol Status: Active</h2><p>Initial calibration readings look stable...</p>',
-      status: 'IN_PROGRESS',
-      createdAt: new Date().toLocaleDateString(),
+      name: 'ern-local-storage', // Key saved in browser's local storage
     }
-  ],
-  activeNoteId: '1',
-  addNote: (title) => set((state) => {
-    const newNote: Note = {
-      id: Math.random().toString(36).substring(7),
-      title,
-      content: '<p>Start typing new lab observations...</p>',
-      status: 'IN_PROGRESS',
-      createdAt: new Date().toLocaleDateString(),
-    };
-    return { notes: [...state.notes, newNote], activeNoteId: newNote.id };
-  }),
-  updateActiveNote: (updates) => set((state) => ({
-    notes: state.notes.map((note) =>
-      note.id === state.activeNoteId ? { ...note, ...updates } : note
-    ),
-  })),
-  setActiveNoteId: (id) => set({ activeNoteId: id }),
-}));
+  )
+);
