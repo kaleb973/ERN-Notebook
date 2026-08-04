@@ -14,7 +14,8 @@ export default function WorkspacePage() {
   const activeNote = notes.find(n => n.id === activeNoteId) || notes[0];
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-slate-950 text-slate-50 font-sans select-none">
+    <div className="flex h-screen w-screen overflow-hidden bg-zinc-950 bg-lab-grid text-zinc-50 font-sans select-none relative">
+      
       <Sidebar
         notes={notes}
         activeNoteId={activeNoteId}
@@ -23,17 +24,19 @@ export default function WorkspacePage() {
         onSelectNote={setActiveNoteId}
         onAddNote={() => addNote("Untitled Experiment")}
       />
-      <main className="flex-1 h-full flex flex-col bg-slate-950 overflow-y-auto px-8 py-12">
+      <main className="flex-1 h-full flex flex-col overflow-y-auto px-8 py-12 z-10">
         <div className="w-full max-w-3xl mx-auto space-y-6">
-          <div className="space-y-2 border-b border-slate-900 pb-4">
+          <div className="space-y-2 border-b border-cyan-900/30 pb-4">
             <input
               type="text"
               value={activeNote?.title || ""}
               onChange={(e) => updateActiveNote({ title: e.target.value })}
-              className="w-full bg-transparent text-4xl font-bold outline-none text-slate-100 placeholder:text-slate-800"
+              className="w-full bg-transparent text-4xl font-black outline-none text-zinc-100 placeholder:text-zinc-800 tracking-tight"
             />
-            <div className="text-xs text-slate-500 font-mono tracking-tight">
-              CREATED: {activeNote?.createdAt} // STATUS: IN_PROGRESS
+            <div className="flex items-center gap-4 text-xs font-mono tracking-tightt">
+              <span className="text-zinc-500">SYS_TIME: {activeNote?.createdAt}</span>
+              <span className="text-cyan-500/50">///</span>
+              <span className="text-fuchsia-400">LOCAL</span>
             </div>
           </div>
           <EditorCanvas />

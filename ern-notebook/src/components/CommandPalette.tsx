@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useNotebookStore } from "@/store/useNotebookStore";
-import { Search, Plus, FileText } from "lucide-react";
+import { Plus, FileText, Terminal } from "lucide-react";
 
 export default function CommandPalette() {
   const [isOpen, setIsOpen] = useState(false);
@@ -46,10 +46,11 @@ export default function CommandPalette() {
 
   if (!isOpen) return null;
 
+  // ARMOR: Guarantee notes is an array to prevent crashes
   const safeNotes = Array.isArray(notes) ? notes : [];
   
   const filteredNotes = safeNotes.filter((note) =>
-    (note?.title|| "Untitled").toLowerCase().includes(searchQuery.toLowerCase())
+    (note?.title|| "Untitled Experiment").toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleSelectNote = (id: string) => {
@@ -58,7 +59,7 @@ export default function CommandPalette() {
   };
 
   const handleCreateNote = () => {
-    addNote(searchQuery || "Untitled Experiement");
+    addNote(searchQuery || "Untitled Experiment");
     setIsOpen(false);
   };
 
@@ -75,76 +76,76 @@ export default function CommandPalette() {
     if (e.key === "Enter") {
       e.preventDefault();
       if (selectedIndex === filteredNotes.length) {
-        // Select existing note
-        handleSelectNote(filteredNotes[selectedIndex].id);
-      } else {
         handleCreateNote();
+      } else if (filteredNotes[selectedIndex]) {
+        handleSelectNote(filteredNotes[selectedIndex].id);
       }
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-[20vh] bg-slate-950/80 backdrop-blur-sm p-4">
-      <div className="w-full max-w-2xl overflow-hidden rounded-xl border border-slate-800 bg-slate-900 shadow-2xl flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-start justify-center pt-[20vh] bg-zinc-950/90 backdrop-blur-sm p-4">
+      <div className="w-full max-w-2xl overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900 shadow-2xl shadow-cyan-900/20 flex flex-col font-mono">
+        
         {/* Input Header */}
-        <div className="flex items-center gap-3 p-4">
-          <div className="h-5 w-5 text-emerald-500 mr-3 shrink-0" />
-          <Search className="h-5 w-5 text-slate-500 mr-3 shrink-0" />
+        <div className="flex items-center gap-3 p-4 border-b border-zinc-800">
+          <Terminal className="h-5 w-5 text-cyan-400 shrink-0" />
           <input
             ref={inputRef}
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={handleInputKeyDown}
-            placeholder="Search logs, run scripts, or create new trials..."
-            className="w-full bg-transparent font-sans text-slate-200 focus:outline-none placeholder:text-slate-600 text-lg"
+            placeholder="Execute command or search..."
+            className="w-full bg-transparent text-zinc-100 focus:outline-none placeholder:text-zinc-600 text-sm"
           />
-        <div className="font-mono text-[10px] text-slate-500 bg-slate-800 px-2 py-1 rounded">ESC</div>
-      </div>
+          <div className="text-[10px] text-zinc-500 bg-zinc-950 border border-zinc-800 px-2 py-1 rounded">ESC</div>
+        </div>
+        
         {/* Action & Results Body */}
         <div className="max-h-[60vh] overflow-y-auto p-2 space-y-1">
           {filteredNotes.length > 0 ? (
             <>
-              <div className="px-3 py-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-                Saved Logs
+              <div className="px-3 py-2 text-[10px] text-zinc-500 tracking-wider">
+                SAVED_LOGS
               </div>
               {filteredNotes.map((note, index) => (
                 <button
                   key={note.id}
                   onClick={() => handleSelectNote(note.id)}
-                  className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg text-left text-sm transition-colors cursor-pointer ${
+                  className={`w-full flex items-center gap-3 px-3 py-3 rounded text-left text-xs transition-colors cursor-pointer ${
                     selectedIndex === index 
-                      ? 'bg-emerald-500/20 text-emerald-400' 
-                      : 'text-slate-300 hover:bg-emerald-500/10 hover:text-emerald-400'
+                      ? 'bg-cyan-500/10 text-cyan-300 border-l-2 border-cyan-400' 
+                      : 'text-zinc-400 hover:bg-zinc-800/50'
                   }`}
                 >
-                  <FileText className={`h-4 w-4 shrink-0 ${selectedIndex === index ? 'text-emerald-400' : 'text-slate-500'}`} />
+                  <FileText className={`h-4 w-4 shrink-0 ${selectedIndex === index ? 'text-cyan-400' : 'text-zinc-600'}`} />
                   <span className="truncate">{note.title}</span>
-                  <span className="ml-auto text-[10px] font-mono text-slate-600">
+                  <span className="ml-auto text-[10px] text-zinc-600">
                     {note.metadata?.status || note.status}
                   </span>
                 </button>
               ))}
             </>
           ) : (
-            <div className="px-3 py-8 text-center text-sm text-slate-500">
+            <div className="px-3 py-8 text-center text-sm text-zinc-600">
               No logs found matching "{searchQuery}"
             </div>
           )}
 
-          <div className="px-3 py-2 text-[10px] font-bold text-slate-500 uppercase tracking-wider mt-2 border-t border-slate-800/50 pt-4">
-            System Commands
+          <div className="px-3 py-2 text-[10px] text-zinc-500 mt-2 border-t border-zinc-800/50 pt-4 tracking-wider">
+            SYS_COMMANDS
           </div>
           <button
             onClick={handleCreateNote}
-            className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg text-left text-sm transition-colors cursor-pointer ${
+            className={`w-full flex items-center gap-3 px-3 py-3 rounded text-left text-xs transition-colors cursor-pointer ${
               selectedIndex === filteredNotes.length 
-                ? 'bg-emerald-500/20 text-emerald-400' 
-                : 'text-slate-300 hover:bg-emerald-500/10 hover:text-emerald-400'
+                ? 'bg-fuchsia-500/10 text-fuchsia-400 border-l-2 border-fuchsia-400' 
+                : 'text-zinc-400 hover:bg-zinc-800/50'
             }`}
           >
-            <Plus className={`h-4 w-4 shrink-0 ${selectedIndex === filteredNotes.length ? 'text-emerald-400' : 'text-slate-500'}`} />
-            <span>Create new log {searchQuery ? `"${searchQuery}"` : ''}</span>
+            <Plus className={`h-4 w-4 shrink-0 ${selectedIndex === filteredNotes.length ? 'text-fuchsia-400' : 'text-zinc-600'}`} />
+            <span>[+] INIT NEW LOG {searchQuery ? `"${searchQuery}"` : ''}</span>
           </button>
         </div>
 
