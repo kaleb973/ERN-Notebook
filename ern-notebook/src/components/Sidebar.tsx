@@ -17,7 +17,7 @@ export default function Sidebar({ notes, activeNoteId, isCollapsed, onToggleColl
     <aside className={`${isCollapsed ? 'w-20' : 'w-[260px]'} h-full bg-zinc-950/80 backdrop-blur-md border-r border-zinc-800/80 flex flex-col p-4 transition-all duration-300 ease-out z-20`}>
       <div className="flex items-center justify-between gap-2 px-2 pb-4 border-b border-zinc-800/80">
         <div className="flex items-center gap-2 min-w-0">
-          <Beaker className="h-5 w-5 text-fuchsia-500 shrink-0" />
+          <img src="/glass.png" alt="Logo" className="h-6 w-6 shrink-0 invert" />
           {!isCollapsed && <span className="font-bold tracking-widest text-zinc-200 truncate uppercase text-sm">BenchNode</span>}
         </div>
         <button type="button" onClick={onToggleCollapse} className="rounded border border-zinc-700 bg-zinc-900 px-2 py-1 text-[10px] text-zinc-400 hover:text-cyan-400">
